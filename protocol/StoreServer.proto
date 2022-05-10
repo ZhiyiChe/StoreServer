@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+option go_package = "github.com/ZhiyiChe/StoreServer/protocol";
+
+package protocol;
+
+// The greeting service definition.
+service Servicer {
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+  // Sends another greeting
+  rpc SayHelloAgain (HelloRequest) returns (HelloReply) {}
+  // RegisterUser 注册
+  rpc RegisterUser (RegisterUserRequest) returns (RegisterUserReply) {}
+  // LoginUser 登录
+  rpc LoginUser (LoginUserRequest) returns (LoginUserReply) {}
+  // QueryAllFiles 查找所有文件 这个接口proto在C++端有奇怪的bug
+  rpc QueryAllFiles (QueryAllFilesRequest) returns (QueryAllFilesReply) {}
+  // UploadFile 上传文件
+  rpc UploadFile (stream Chunk) returns (UploadFileReply) {}
+  // QueryFileIsEncrypted 查询文件是否加密
+  rpc QueryFileIsEncrypted (QueryFileIsEncryptedRequest) returns (QueryFileIsEncryptedReply) {}
+  // VerifyFilePassword 校验文件密码
+  rpc VerifyFilePassword (VerifyFilePasswordRequest) returns (VerifyFilePasswordReply) {}
+  // DownloadFile 下载文件
+  rpc DownloadFile (DownloadFileRequest) returns (stream Chunk) {}
+  // DeleteFile 删除文件
+  rpc DeleteFile (DeleteFileRequest) returns (DeleteFileReply) {}
+  // QueryFileMd 查询文件md5
+  rpc QueryFileMd (QueryFileMdRequest) returns (QueryFileMdReply) {}
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+  string message = 1;
+}
+
+message RegisterUserRequest {
+  string userName = 1;
+  string password = 2;
+}
+
+message RegisterUserReply {
+  int32 code = 1;
+  string message = 2;
+}
+
+message LoginUserRequest {
+  string userName = 1;
+  string password = 2;
+}
+
+message LoginUserReply {
+  int32 code = 1;
+  string message = 2;
+}
+
+message QueryAllFilesRequest {
+  string userName = 1;
+}
+
+message QueryAllFilesReply {
+  message FileInfo {
+    string fileName = 1;
+    string fileType = 2;
+    string fileSize = 3;
+    string updateTime = 4;
+  }
+  repeated FileInfo files = 1;
+}
+
+message Chunk {
+  bytes content = 1;
+}
+
+message UploadFileReply {
+  int32 code = 1;
+  string message = 2;
+}
+
+message QueryFileIsEncryptedRequest {
+  string userName = 1;
+  string fileName = 2;
+}
+
+message QueryFileIsEncryptedReply {
+  int32 code = 1;
+  string message = 2;
+}
+
+message VerifyFilePasswordRequest {
+  string userName = 1;
+  string fileName = 2;
+  string password = 3;
+}
+
+message VerifyFilePasswordReply {
+  int32 code = 1;
+  string message = 2;
+}
+
+message DownloadFileRequest {
+  string userName = 1;
+  string fileName = 2;
+}
+
+message DeleteFileRequest {
+  string userName = 1;
+  string fileName = 2;
+}
+
+message DeleteFileReply {
+  int32 code = 1;
+  string message = 2;
+}
+
+message QueryFileMdRequest {
+  string userName = 1;
+  string fileName = 2;
+}
+
+message QueryFileMdReply {
+  int32 code = 1;
+  string message = 2;
+  string data = 3;
+}
